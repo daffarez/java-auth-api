@@ -6,7 +6,9 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -14,16 +16,29 @@ public class JwtUtil {
 
     private final SecretKey key = Jwts.SIG.HS256.key().build();
 
-    public String generateToken(String username, Role role, Long id) {
+    public String generateToken(String username, Map<String, Object> claims) {
         int expirationTime = 86400000;
         return Jwts.builder()
                 .subject(username)
-                .claim("id", id)
-                .claim("role", role)
+                .claims(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key)
                 .compact();
+    }
+
+    public Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public Instant extractCreatedAt(String token) {
+        Claims claims = extractAllClaims(token);
+        Long epoch = claims.get("createdAt", Long.class);
+        return (epoch != null) ? Instant.ofEpochSecond(epoch) : null;
     }
 
     public String extractUsername(String token) {

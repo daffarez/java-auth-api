@@ -8,6 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -25,6 +29,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @CreatedDate
+    @Column(updatable = false, nullable = false)
+    private Instant createdAt;
 
     public User() {}
 
@@ -63,4 +71,10 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 }

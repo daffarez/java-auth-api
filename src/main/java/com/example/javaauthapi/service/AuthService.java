@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AuthService {
 
@@ -31,6 +35,8 @@ public class AuthService {
             user.setRole(Role.ROLE_USER);
         }
 
+        user.setCreatedAt(Instant.ofEpochMilli(System.currentTimeMillis()));
+
         return userRepository.save(user);
     }
 
@@ -42,10 +48,15 @@ public class AuthService {
             throw new RuntimeException("wrong password");
         }
 
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
+        claims.put("id", user.getId());
+        claims.put("createdAt", user.getCreatedAt());
+
+
         return jwtUtil.generateToken(
                 user.getUsername(),
-                user.getRole(),
-                user.getId()
+                claims
         );
     }
 }
