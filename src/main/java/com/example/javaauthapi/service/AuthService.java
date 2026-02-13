@@ -29,4 +29,15 @@ public class AuthService {
 
         return userRepository.save(user);
     }
+
+    public String login(String username, String password) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("user not found."));
+
+        if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("wrong password");
+        }
+
+        return "successfully logged in";
+    }
 }
