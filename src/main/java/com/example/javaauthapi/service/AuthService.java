@@ -3,12 +3,16 @@ package com.example.javaauthapi.service;
 import com.example.javaauthapi.model.Role;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.repository.UserRepository;
+import com.example.javaauthapi.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,6 +42,10 @@ public class AuthService {
             throw new RuntimeException("wrong password");
         }
 
-        return "successfully logged in";
+        return jwtUtil.generateToken(
+                user.getUsername(),
+                user.getRole(),
+                user.getId()
+        );
     }
 }
