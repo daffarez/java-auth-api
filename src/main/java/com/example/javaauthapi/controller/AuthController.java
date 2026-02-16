@@ -1,6 +1,7 @@
 package com.example.javaauthapi.controller;
 
 import com.example.javaauthapi.dto.LoginRequest;
+import com.example.javaauthapi.dto.RegisterRequest;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.service.AuthService;
 import jakarta.validation.Valid;
@@ -19,9 +20,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid  @RequestBody User user) {
+    public ResponseEntity<?> registerUser(@Valid  @RequestBody RegisterRequest registerRequst) {
         try {
-            User registeredUser = authService.register(user);
+            User registeredUser = authService.register(registerRequst);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "message", registeredUser.getUsername() + " successfully registered."
             ));

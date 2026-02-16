@@ -1,5 +1,6 @@
 package com.example.javaauthapi.service;
 
+import com.example.javaauthapi.dto.RegisterRequest;
 import com.example.javaauthapi.model.Role;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.repository.UserRepository;
@@ -23,21 +24,25 @@ public class AuthService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    public User register(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+    public User register(RegisterRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("username exist.");
         }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+        User newUser = new User();
 
-        if (user.getRole() == null) {
-            user.setRole(Role.ROLE_USER);
+        newUser.setUsername(request.getUsername());
+
+        String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+        newUser.setPassword(encodedPassword);
+
+        if (request.getRole() == null) {
+            newUser.setRole(Role.ROLE_USER);
         }
 
-        user.setCreatedAt(Instant.ofEpochMilli(System.currentTimeMillis()));
+        newUser.setCreatedAt(Instant.now());
 
-        return userRepository.save(user);
+        return userRepository.save(newUser);
     }
 
     public String login(String username, String password) {
