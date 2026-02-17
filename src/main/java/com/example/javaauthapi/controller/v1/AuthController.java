@@ -1,4 +1,4 @@
-package com.example.javaauthapi.controller;
+package com.example.javaauthapi.controller.v1;
 
 import com.example.javaauthapi.dto.LoginRequest;
 import com.example.javaauthapi.dto.RegisterRequest;
@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("v1/api/auth")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid  @RequestBody RegisterRequest registerRequst) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequst) {
         try {
             User registeredUser = authService.register(registerRequst);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                    "message", registeredUser.getUsername() + " successfully registered."
+                    "message", "User:" + registeredUser.getUsername() + " successfully registered"
             ));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -32,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public  ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         try {
             String token = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
             return ResponseEntity.status(HttpStatus.OK).body(Map.of(

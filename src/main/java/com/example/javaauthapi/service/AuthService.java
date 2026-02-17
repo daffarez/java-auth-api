@@ -6,7 +6,6 @@ import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.repository.UserRepository;
 import com.example.javaauthapi.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class AuthService {
 
     public User register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("username exist.");
+            throw new RuntimeException("Username exist");
         }
 
         User newUser = new User();
@@ -45,10 +44,10 @@ public class AuthService {
 
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("user not found."));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("wrong password");
+            throw new RuntimeException("Incorrect password");
         }
 
         Map<String, Object> claims = new HashMap<>();
