@@ -1,6 +1,21 @@
 # Java Auth API (JWT)
 
-A lightweight and efficient Authentication & Authorization API with Java. This project focuses on a stateless security architecture and Role-Based Access Control (RBAC).
+A robust and scalable RESTful Authentication API built with Spring Boot 4, Spring Security 6, and PostgreSQL. This
+project implements modern security patterns, strict data validation, and clean architecture principles.
+
+---
+
+## Tech Stack
+
+Language: Java 21 (LTS)
+
+- Framework: Spring Boot 4, Spring Security 6
+- Database: PostgreSQL
+- Persistence: Spring Data JPA / Hibernate
+- Security: JSON Web Token (JWT)
+- Documentation: SpringDoc OpenAPI / Swagger
+
+Utilities: Lombok, Maven
 
 ---
 
@@ -42,4 +57,5 @@ A lightweight and efficient Authentication & Authorization API with Java. This p
 ---
 
 ## Swagger OpenAPI
+
 `http://localhost:8080/v1/api/swagger-ui/index.html`
