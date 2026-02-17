@@ -23,17 +23,20 @@ Utilities: Lombok, Maven
 
 ### Auth Operations
 
-| Method | Endpoint             | Access | Description                      |
-|:-------|:---------------------|:-------|:---------------------------------|
-| `POST` | `/api/auth/register` | Public | Register a new user              |
-| `POST` | `/api/auth/login`    | Public | Login and receive a Bearer Token |
+| Method | Endpoint                  | Access | Description                                         |
+|:-------|:--------------------------|:-------|:----------------------------------------------------|
+| `POST` | `/api/auth/register`      | Public | Register a new user.                                |
+| `POST` | `/api/auth/login`         | Public | Login and receive a Bearer Token.                   |
+| `POST` | `/api/auth/logout`        | Public | Invalidate session and blacklist the current token. |
+| `POST` | `/api/auth/refresh-token` | Public | Exchange a Refresh Token for a new Access Token.    |
 
 ### User Information
 
-| Method | Endpoint                     | Access  | Description                                           |
-|:-------|:-----------------------------|:--------|:------------------------------------------------------|
-| `GET`  | `/api/users/profile`         | Private | Extract and view claims from your JWT                 |
-| `POST` | `/api/users/change-password` | Private | Extract claims from your JWT and change user password |
+| Method | Endpoint                     | Access  | Description                 |
+|:-------|:-----------------------------|:--------|:----------------------------|
+| `GET`  | `/api/users/profile`         | Private | Get current user profile.   |
+| `POST` | `/api/users/change-password` | Private | Change account password.    |
+| `PUT`  | `/api/users/update-profile`  | Private | Update profile information. |
 
 ---
 
@@ -53,6 +56,14 @@ Utilities: Lombok, Maven
 3. **Using the play/run button in IntelliJ**
 
 **The application will start on `http://localhost:8080`.**
+
+---
+
+## Run the unit test
+
+   ```bash
+   ./mvnw clean test
+   ```
 
 ---
 
