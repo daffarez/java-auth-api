@@ -7,6 +7,7 @@ import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.security.JwtUtil;
 import com.example.javaauthapi.service.UserService;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
+    @Operation(summary = "Get current user profile")
     @GetMapping("/profile")
     public ResponseEntity<UserResponse> getMyProfile(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -46,6 +48,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Change account password")
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
@@ -55,6 +58,7 @@ public class UserController {
         return ResponseEntity.ok("Password successfully changed");
     }
 
+    @Operation(summary = "Update profile information")
     @PutMapping("/update-profile")
     public ResponseEntity<Map<String, Object>> updateProfile(
             @Valid @RequestBody UpdateProfileRequest request,

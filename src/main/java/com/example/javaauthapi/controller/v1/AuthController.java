@@ -1,6 +1,7 @@
 package com.example.javaauthapi.controller.v1;
 
 import com.example.javaauthapi.dto.request.LoginRequest;
+import com.example.javaauthapi.dto.request.RefreshTokenRequest;
 import com.example.javaauthapi.dto.request.RegisterRequest;
 import com.example.javaauthapi.dto.response.LoginResponse;
 import com.example.javaauthapi.dto.response.RegisterResponse;
@@ -8,6 +9,11 @@ import com.example.javaauthapi.model.RefreshToken;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.service.AuthService;
 import com.example.javaauthapi.service.RefreshTokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +32,15 @@ public class AuthController {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Operation(
+            summary = "Register a new user",
+            description = "Create a new user account with unique username and email. Validates password strength and email format."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User successfully registered"),
+            @ApiResponse(responseCode = "400", description = "Invalid input or user already exists",
+                    content = @Content(schema = @Schema(example = "{\"error\": \"Username already taken\"}")))
+    })
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequst) {
         try {
@@ -42,26 +57,35 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Login user", description = "Authenticate user and return access & refresh tokens")
+    @ApiResponse(responseCode = "401", description = "Unauthorized",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(example = "{ \"timestamp\": \"2026-02-17T...\", \"error\": \"Unauthorized\", \"message\": \"Invalid credentials\" }")))
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-        try {
-            String accessToken = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(loginRequest.getUsername());
-            LoginResponse response = new LoginResponse(
-                    accessToken,
-                    refreshToken.getToken(),
-                    loginRequest.getUsername()
-            );
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+        String accessToken = authService.login(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+        );
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(loginRequest.getUsername());
 
-            return ResponseEntity.ok(response);
+        LoginResponse response = new LoginResponse(
+                accessToken,
+                refreshToken.getToken(),
+                loginRequest.getUsername()
+        );
 
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "error", e.getMessage()
-            ));
-        }
+        return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Logout user",
+            description = "Invalidates the current access token by adding it to the blacklist. Requires a valid Bearer Token."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully logged out"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - Token is missing or invalid")
+    })
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(@RequestHeader("Authorization") String authHeader) {
         authService.logout(authHeader);
@@ -70,10 +94,11 @@ public class AuthController {
         ));
     }
 
+    @Operation(summary = "Refresh access token", description = "Get a new access token using a valid refresh token")
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         try {
-            String requestToken = request.get("refreshToken");
+            String requestToken = refreshTokenRequest.getRefreshToken();
             LoginResponse response = refreshTokenService.refreshAccessToken(requestToken);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
