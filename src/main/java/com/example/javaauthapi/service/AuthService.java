@@ -42,8 +42,6 @@ public class AuthService {
 
         newUser.setRole(request.getRole() == null ? Role.ROLE_USER : request.getRole());
 
-        newUser.setCreatedAt(Instant.now());
-
         return userRepository.save(newUser);
     }
 

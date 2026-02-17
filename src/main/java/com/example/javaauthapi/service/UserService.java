@@ -45,7 +45,6 @@ public class UserService {
         user.setFirstName(updateProfileRequest.getFirstName());
         user.setLastName(updateProfileRequest.getLastName());
         user.setEmail(updateProfileRequest.getEmail());
-        user.setUpdatedAt(Instant.now());
 
         return userRepository.save(user);
     }
