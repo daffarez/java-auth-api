@@ -31,12 +31,11 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, Map<String, Object> claims) {
-        int expirationTime = 86400000;
         return Jwts.builder()
                 .subject(username)
                 .claims(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(key)
                 .compact();
     }
