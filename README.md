@@ -23,7 +23,7 @@ Utilities: Lombok, Maven
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/daffarez/java-auth-api.git](https://github.com/yourusername/java-auth-api.git)
+   git clone https://github.com/daffarez/java-auth-api.git
    cd java-auth-api
    ```
 
