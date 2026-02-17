@@ -19,27 +19,6 @@ Utilities: Lombok, Maven
 
 ---
 
-## API Endpoints
-
-### Auth Operations
-
-| Method | Endpoint                  | Access | Description                                         |
-|:-------|:--------------------------|:-------|:----------------------------------------------------|
-| `POST` | `/api/auth/register`      | Public | Register a new user.                                |
-| `POST` | `/api/auth/login`         | Public | Login and receive a Bearer Token.                   |
-| `POST` | `/api/auth/logout`        | Public | Invalidate session and blacklist the current token. |
-| `POST` | `/api/auth/refresh-token` | Public | Exchange a Refresh Token for a new Access Token.    |
-
-### User Information
-
-| Method | Endpoint                     | Access  | Description                 |
-|:-------|:-----------------------------|:--------|:----------------------------|
-| `GET`  | `/api/users/profile`         | Private | Get current user profile.   |
-| `POST` | `/api/users/change-password` | Private | Change account password.    |
-| `PUT`  | `/api/users/update-profile`  | Private | Update profile information. |
-
----
-
 ## How to Run
 
 1. **Clone the repository:**
