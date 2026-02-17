@@ -49,12 +49,6 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public Instant extractCreatedAt(String token) {
-        Claims claims = extractAllClaims(token);
-        Long epoch = claims.get("createdAt", Long.class);
-        return (epoch != null) ? Instant.ofEpochSecond(epoch) : null;
-    }
-
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -74,5 +68,10 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
         return claimsResolver.apply(claims);
+    }
+
+    public Instant extractExpiration(String token) {
+        Date expiration = extractClaim(token, Claims::getExpiration);
+        return expiration.toInstant();
     }
 }

@@ -3,9 +3,12 @@ package com.example.javaauthapi.service;
 import com.example.javaauthapi.dto.request.RegisterRequest;
 import com.example.javaauthapi.exception.DuplicateResourceException;
 import com.example.javaauthapi.model.Role;
+import com.example.javaauthapi.model.InvalidatedToken;
 import com.example.javaauthapi.model.User;
+import com.example.javaauthapi.repository.InvalidatedTokenRepository;
 import com.example.javaauthapi.repository.UserRepository;
 import com.example.javaauthapi.security.JwtUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final InvalidatedTokenRepository invalidatedTokenRepository;
 
     public User register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -63,5 +67,22 @@ public class AuthService {
                 user.getUsername(),
                 claims
         );
+    }
+
+    @Transactional
+    public void logout(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid Token");
+        }
+
+        String jwt = authHeader.substring(7);
+        Instant expiryDate = jwtUtil.extractExpiration(jwt);
+
+        InvalidatedToken blacklistedToken = InvalidatedToken.builder()
+                .token(jwt)
+                .expiryDate(expiryDate)
+                .build();
+
+        invalidatedTokenRepository.save(blacklistedToken);
     }
 }

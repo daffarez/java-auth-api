@@ -1,8 +1,11 @@
 package com.example.javaauthapi.service;
 
 import com.example.javaauthapi.dto.request.RegisterRequest;
+import com.example.javaauthapi.exception.DuplicateResourceException;
+import com.example.javaauthapi.model.InvalidatedToken;
 import com.example.javaauthapi.model.Role;
 import com.example.javaauthapi.model.User;
+import com.example.javaauthapi.repository.InvalidatedTokenRepository;
 import com.example.javaauthapi.repository.UserRepository;
 import com.example.javaauthapi.security.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,14 +38,23 @@ class AuthServiceTest {
     @Mock
     private JwtUtil jwtUtil;
 
+    @Mock
+    private InvalidatedTokenRepository invalidatedTokenRepository;
+
     @InjectMocks
     private AuthService authService;
+
 
     private User dummyUser;
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(jwtUtil, userRepository, passwordEncoder);
+        authService = new AuthService(
+                jwtUtil,
+                userRepository,
+                passwordEncoder,
+                invalidatedTokenRepository
+        );
 
         dummyUser = User.builder()
                 .username("user_test")
@@ -92,5 +104,28 @@ class AuthServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
         assertThrows(RuntimeException.class, () -> authService.login("user_test", "wrong_password"));
+    }
+
+    @Test
+    void testRegister_EmailAlreadyExists() {
+        RegisterRequest request = new RegisterRequest();
+        request.setEmail("existing@mail.com");
+
+        // Mocking email check
+        when(userRepository.existsByEmail("existing@mail.com")).thenReturn(true);
+
+        assertThrows(DuplicateResourceException.class, () -> authService.register(request));
+    }
+
+    @Test
+    void testLogout_Success() {
+        String authHeader = "Bearer valid_token";
+        Instant now = Instant.now();
+
+        when(jwtUtil.extractExpiration(anyString())).thenReturn(now);
+
+        authService.logout(authHeader);
+
+        verify(invalidatedTokenRepository, times(1)).save(any(InvalidatedToken.class));
     }
 }
