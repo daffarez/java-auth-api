@@ -1,6 +1,6 @@
 package com.example.javaauthapi.service;
 
-import com.example.javaauthapi.dto.RegisterRequest;
+import com.example.javaauthapi.dto.request.RegisterRequest;
 import com.example.javaauthapi.model.Role;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.repository.UserRepository;

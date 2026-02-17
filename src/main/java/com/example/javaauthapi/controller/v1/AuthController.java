@@ -1,8 +1,8 @@
 package com.example.javaauthapi.controller.v1;
 
-import com.example.javaauthapi.dto.LoginRequest;
-import com.example.javaauthapi.dto.RegisterRequest;
-import com.example.javaauthapi.dto.RegisterResponse;
+import com.example.javaauthapi.dto.request.LoginRequest;
+import com.example.javaauthapi.dto.request.RegisterRequest;
+import com.example.javaauthapi.dto.response.RegisterResponse;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.service.AuthService;
 import jakarta.validation.Valid;

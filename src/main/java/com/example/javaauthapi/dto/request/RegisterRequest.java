@@ -1,4 +1,4 @@
-package com.example.javaauthapi.dto;
+package com.example.javaauthapi.dto.request;
 
 import com.example.javaauthapi.model.Role;
 import jakarta.validation.constraints.NotBlank;

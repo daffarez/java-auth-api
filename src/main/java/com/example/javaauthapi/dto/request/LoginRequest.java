@@ -1,4 +1,4 @@
-package com.example.javaauthapi.dto;
+package com.example.javaauthapi.dto.request;
 
 import lombok.Data;
 
