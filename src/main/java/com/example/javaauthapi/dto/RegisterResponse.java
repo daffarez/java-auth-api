@@ -1,4 +1,11 @@
 package com.example.javaauthapi.dto;
 
-public class RegisterResponse {
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class RegisterResponse<T> {
+    private String message;
+    private T data;
 }

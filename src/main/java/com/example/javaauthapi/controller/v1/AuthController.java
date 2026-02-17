@@ -2,6 +2,7 @@ package com.example.javaauthapi.controller.v1;
 
 import com.example.javaauthapi.dto.LoginRequest;
 import com.example.javaauthapi.dto.RegisterRequest;
+import com.example.javaauthapi.dto.RegisterResponse;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.service.AuthService;
 import jakarta.validation.Valid;
@@ -23,9 +24,13 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequst) {
         try {
             User registeredUser = authService.register(registerRequst);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                    "message", "User:" + registeredUser.getUsername() + " successfully registered"
-            ));
+            return ResponseEntity.status(HttpStatus.CREATED).body(RegisterResponse.<Map<String, String>>builder()
+                    .message(registerRequst.getUsername() + " successfully registered")
+                    .data(Map.of(
+                            "email", registeredUser.getEmail(),
+                            "role", registeredUser.getRole().toString()
+                    ))
+                    .build());
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
