@@ -1,8 +1,8 @@
 package com.example.javaauthapi.dto;
 
 import com.example.javaauthapi.model.Role;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -19,7 +19,10 @@ public class RegisterRequest {
     private Role role;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @Pattern(
+            regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+            message = "Invalid email format"
+    )
     private String email;
 
     @NotBlank(message = "First name is required")

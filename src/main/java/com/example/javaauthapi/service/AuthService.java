@@ -1,6 +1,7 @@
 package com.example.javaauthapi.service;
 
 import com.example.javaauthapi.dto.RegisterRequest;
+import com.example.javaauthapi.exception.DuplicateResourceException;
 import com.example.javaauthapi.model.Role;
 import com.example.javaauthapi.model.User;
 import com.example.javaauthapi.repository.UserRepository;
@@ -23,7 +24,10 @@ public class AuthService {
 
     public User register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username exist");
+            throw new DuplicateResourceException("Username already exists");
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException("Email already exists");
         }
 
         User newUser = new User();
