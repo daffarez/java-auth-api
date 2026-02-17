@@ -29,13 +29,14 @@ public class AuthService {
         User newUser = new User();
 
         newUser.setUsername(request.getUsername());
+        newUser.setEmail(request.getEmail());
+        newUser.setFirstName(request.getFirstName());
+        newUser.setLastName(request.getLastName());
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         newUser.setPassword(encodedPassword);
 
-        if (request.getRole() == null) {
-            newUser.setRole(Role.ROLE_USER);
-        }
+        newUser.setRole(request.getRole() == null ? Role.ROLE_USER : request.getRole());
 
         newUser.setCreatedAt(Instant.now());
 

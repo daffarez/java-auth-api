@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -26,6 +27,15 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false, length = 50)
+    private String firstName;
+
+    @Column(length = 50)
+    private String lastName;
+
     @Column(nullable = false)
     private String password;
 
@@ -36,4 +46,12 @@ public class User {
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private Instant createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private Instant updatedAt;
+
+    public String getFullName() {
+        return (lastName != null) ? firstName + " " + lastName : firstName;
+    }
 }
