@@ -27,11 +27,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("v1/api/auth/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/v1/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/v1/api/docs/**",
+                                "/v1/api/api-docs/**",
+                                "/v1/api/swagger-ui/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }

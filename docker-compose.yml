@@ -17,7 +17,7 @@ services:
     build: .
     container_name: java-auth-api-container
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/java_auth_db
       SPRING_DATASOURCE_USERNAME: postgres
