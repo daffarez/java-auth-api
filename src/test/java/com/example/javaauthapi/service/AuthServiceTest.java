@@ -111,7 +111,6 @@ class AuthServiceTest {
         RegisterRequest request = new RegisterRequest();
         request.setEmail("existing@mail.com");
 
-        // Mocking email check
         when(userRepository.existsByEmail("existing@mail.com")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class, () -> authService.register(request));

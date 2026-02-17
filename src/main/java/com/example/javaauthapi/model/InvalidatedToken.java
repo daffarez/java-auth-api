@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 @Entity
-@Table(name = "token_blacklist")
+@Table(name = "invalidated_token")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

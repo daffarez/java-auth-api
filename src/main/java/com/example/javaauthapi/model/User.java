@@ -19,7 +19,6 @@ import java.time.Instant;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
