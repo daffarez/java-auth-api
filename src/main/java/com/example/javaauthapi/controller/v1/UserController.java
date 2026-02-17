@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.Instant;
@@ -45,8 +42,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/change-password")
-    public ResponseEntity<?> changePassword(
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
             Principal principal
     ) {
